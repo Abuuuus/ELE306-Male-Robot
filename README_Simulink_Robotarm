@@ -1,0 +1,4 @@
+For å kjøre simulink simuleringen av robotarm må følgende gjøres:
+1. Åpne simulink filen "Test_Simulering_ProsjektX_Malerobot.slx" for Matlab versjon Matlab2024b eller "Simulasjon_ProsjektX_Malerobot_R2024a_versjon" for Matlab versjon Matlab2024a 
+2. Kjør scriptet: "Simulasjon_Robotarm.m" for å importere rigid body til simulink
+3. 
