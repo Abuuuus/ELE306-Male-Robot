@@ -1,4 +1,7 @@
 For å kjøre simulink simuleringen av robotarm må følgende gjøres:
 1. Åpne simulink filen "Test_Simulering_ProsjektX_Malerobot.slx" for Matlab versjon Matlab2024b eller "Simulasjon_ProsjektX_Malerobot_R2024a_versjon" for Matlab versjon Matlab2024a 
-2. Kjør scriptet: "Simulasjon_Robotarm.m" for å importere rigid body til simulink
-3. 
+2. Kjør scriptet: "Simulasjon_RobotArm.m" for å importere rigid body til simulink
+3. I simulink modellen, dobbelklikk på blokk: "Inverse Kinematics". Endre Rigid body tree til variabelen Robot_X som ble opprettet av "Simulasjon_Robotarm.m" scriptet
+4. I simulink modellen, dobbelklikk på blokk: "Get Transform". Endre Rigid body tree til variabelen Robot_X som ble opprettet av "Simulasjon_Robotarm.m" scriptet
+5. Nå er simulinken klar til å kjøres, klikk på Run for å se simulasjonen. 
+Om det skulle bli problemer med dette ikke vær redd for å ta kontakt, eller se og video i raporten som viser simulasjonen om det blir problemer. 
