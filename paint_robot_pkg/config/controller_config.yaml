@@ -1,0 +1,23 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # H
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    robot_manipulator_controller:
+      type: forward_command_controller/ForwardCommandController
+
+robot_manipulator_controller:
+  ros__parameters:
+    joints:
+      - beam3_to_beam2
+      - beam3_to_plate_horizontal
+      - plate_vertical_to_joint_1
+      - joint_1_to_joint_2
+      - joint_4_to_joint_5
+      - joint_7_to_joint_8
+      - joint_8_to_joint_9
+      # ...
+
+    interface_name: position

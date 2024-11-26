@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<robot>
+    <!--Add gazebo specific definitions here-->
+
+    <gazebo reference="beam3_to_beam2">
+        <implicitSpringDamper>true</implicitSpringDamper>
+    </gazebo>
+    <gazebo reference="beam3_to_plate_horizontal">
+        <implicitSpringDamper>true</implicitSpringDamper>
+    </gazebo>
+    <gazebo reference="plate_vertical_to_joint_1">
+        <implicitSpringDamper>true</implicitSpringDamper>
+    </gazebo>
+    <gazebo reference="joint_1_to_joint_2">
+        <implicitSpringDamper>true</implicitSpringDamper>
+    </gazebo>
+    <gazebo reference="joint_4_to_joint_5">
+        <implicitSpringDamper>true</implicitSpringDamper>
+    </gazebo>
+    <gazebo reference="joint_7_to_joint_8">
+        <implicitSpringDamper>true</implicitSpringDamper>
+    </gazebo>
+    <gazebo reference="joint_8_to_joint_9">
+        <implicitSpringDamper>true</implicitSpringDamper>
+    </gazebo>
+
+    <gazebo>
+        <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+            <robot_sim_type>gazebo_ros2_control/GazeboSystem</robot_sim_type>
+            <parameters>$(find paint_robot_pkg)/config/controller_config.yaml</parameters>
+        </plugin>
+    </gazebo>
+
+    <ros2_control name="GazeboSystem" type="system">
+        <hardware>
+            <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+        </hardware>
+
+
+        <joint name="beam3_to_beam2">
+            <command_interface name="position">
+                <param name="min">${0}</param>
+                <param name="max">${1.0}</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+            <joint name="beam3_to_plate_horizontal">
+            <command_interface name="position">
+                <param name="min">-${0.5}</param>
+                <param name="max">${0.5}</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="plate_vertical_to_joint_1">
+            <command_interface name="position">
+                <param name="min">-${pi}</param>
+                <param name="max">${0}</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="joint_1_to_joint_2">
+            <command_interface name="position">
+                <param name="min">-${pi/2}</param>
+                <param name="max">${pi/2}</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="joint_4_to_joint_5">
+            <command_interface name="position">
+                <param name="min">-${pi}</param>
+                <param name="max">${pi}</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="joint_7_to_joint_8">
+            <command_interface name="position">
+                <param name="min">-${pi}</param>
+                <param name="max">${pi}</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="joint_8_to_joint_9">
+            <command_interface name="position">
+                <param name="min">-${pi}</param>
+                <param name="max">${pi}</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        
+
+
+    </ros2_control>
+
+
+    <gazebo>
+        <plugin name="mobile_base_controller" filename="libgazebo_ros_diff_drive.so">
+            <ros>
+                <!-- <namespace>/demo</namespace>
+
+                <remapping>cmd_vel:=cmd_demo</remapping>
+                <remapping>odom:=odom_demo</remapping>  -->
+            </ros>
+
+            <update_rate>100</update_rate>
+
+
+            <num_wheel_pairs>1</num_wheel_pairs>
+
+            <left_joint>body_to_back_left_wheel</left_joint>
+            <right_joint>body_to_back_right_wheel</right_joint>
+
+            <wheel_separation>1.35</wheel_separation>
+
+            <wheel_diameter>0.3</wheel_diameter>
+
+            <max_wheel_torque>500</max_wheel_torque>
+            <max_wheel_acceleration>1.0</max_wheel_acceleration>
+
+            <publish_odom>true</publish_odom>
+            <publish_odom_tf>true</publish_odom_tf>
+            <publish_wheel_tf>false</publish_wheel_tf>
+
+            <odometry_frame>odom</odometry_frame>
+            <robot_base_frame>base_link</robot_base_frame>
+        </plugin>
+    </gazebo>
+
+</robot>

@@ -1,0 +1,1182 @@
+<?xml version='1.0'?>
+
+<robot name="paint_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<!--Disable gazebo physics  
+    <gazebo>
+        <static>true</static>
+    </gazebo> -->
+
+<xacro:include filename="$(find paint_robot_pkg)/urdf/common_macros.xacro" /> <!--Change file location and package if applicable to test for yourself-->
+<xacro:include filename="$(find paint_robot_pkg)/urdf/robot_control.gazebo.xacro" />  <!--Change file location and package name if applicable to test for yourself-->
+
+  <xacro:property name="box_size_length" value="1.5" />
+  <xacro:property name="box_size_width" value="1.2" />
+  <xacro:property name="box_size_height" value="1.0" />
+        <gazebo reference="base_link">
+          <material>Gazebo/Orange</material>
+        </gazebo>
+          <gazebo reference="center_mass_balance">
+          <material>Gazebo/Orange</material>
+        </gazebo>
+        <gazebo reference="LIDAR_top">
+          <material>Gazebo/Yellow</material>
+        </gazebo>
+        <gazebo reference="camera_frame_front">
+          <material>Gazebo/Black</material>
+        </gazebo>
+        <gazebo reference="camera_frame_back">
+          <material>Gazebo/Black</material>
+        </gazebo>
+        <gazebo reference="camera_frame_arm">
+          <material>Gazebo/Black</material>
+        </gazebo>
+        <gazebo reference="sensor_right_front">
+          <material>Gazebo/White</material>
+        </gazebo>
+        <gazebo reference="sensor_left_front">
+          <material>Gazebo/White</material>
+        </gazebo>
+        <gazebo reference="sensor_right_back">
+          <material>Gazebo/White</material>
+        </gazebo>
+        <gazebo reference="sensor_left_back">
+          <material>Gazebo/White</material>
+        </gazebo>
+        <gazebo reference="sensor_left_arm">
+          <material>Gazebo/White</material>
+        </gazebo>
+        <gazebo reference="sensor_right_arm">
+          <material>Gazebo/White</material>
+        </gazebo>
+         <gazebo reference="wheel_front_left">
+          <material>Gazebo/Black</material>
+        </gazebo>
+        <gazebo reference="wheel_front_right">
+          <material>Gazebo/Black</material>
+        </gazebo>
+        <gazebo reference="wheel_back_left">
+          <material>Gazebo/Black</material>
+        </gazebo>
+        <gazebo reference="wheel_back_right">
+          <material>Gazebo/Black</material>
+        </gazebo>
+        <gazebo reference="beam1">
+          <material>Gazebo/Green</material>
+        </gazebo>
+        <gazebo reference="beam2">
+          <material>Gazebo/Green</material>
+        </gazebo>
+        <gazebo reference="beam3">
+          <material>Gazebo/Green</material>
+        </gazebo>
+        <gazebo reference="joint_1">
+          <material>Gazebo/Blue</material>
+        </gazebo>
+        <gazebo reference="joint_2">
+          <material>Gazebo/Blue</material>
+        </gazebo>
+        <gazebo reference="joint_3">
+          <material>Gazebo/Blue</material>
+        </gazebo>
+        <gazebo reference="joint_4">
+          <material>Gazebo/Blue</material>
+        </gazebo>
+        <gazebo reference="joint_5">
+          <material>Gazebo/Blue</material>
+        </gazebo>
+        <gazebo reference="joint_6">
+          <material>Gazebo/Blue</material>
+        </gazebo>
+        <gazebo reference="joint_7">
+          <material>Gazebo/Blue</material>
+        </gazebo>
+        <gazebo reference="joint_8">
+          <material>Gazebo/Blue</material>
+        </gazebo>
+        <gazebo reference="joint_9">
+          <material>Gazebo/Blue</material>
+        </gazebo>
+        <gazebo reference="end_effector">
+          <material>Gazebo/Red</material>
+        </gazebo>
+        <gazebo reference="nozzle">
+          <material>Gazebo/Red</material>
+        </gazebo>
+
+
+        
+        
+  <!-- Base Link -->  
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0.6" rpy="0 0 0"/> 
+      <geometry>
+        <box size="${box_size_length} ${box_size_width} ${box_size_height}" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.6" rpy="0 0 0"/>
+      <geometry>
+        <box size="${box_size_length} ${box_size_width} ${box_size_height}" />
+      </geometry>
+    </collision>
+      <xacro:inertial_box length="1.5" width="1.2" height="1.0" density="300">
+        <origin xyz="0 0 0.6" rpy="0 0 0"/>
+      </xacro:inertial_box>
+  </link>
+
+ <link name="center_mass_balance">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <box size="0.5 0.1 0.9" />
+      </geometry>
+      <material name="grey">
+        <color rgba="0.5 0.5 0.5 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.5 0.1 0.9" />
+      </geometry>
+    </collision>
+      <xacro:inertial_box length="0.5" width="0.1" height="0.9" density="3700">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_box>
+  </link>
+
+    <joint name="body_to_center_mass_balance" type="fixed">
+    <axis xyz="0 0 0"/>
+    <origin xyz="0 -0.65 0.65" rpy="0 0 0"/> 
+    <parent link="base_link" />
+    <child link="center_mass_balance" /> 
+  </joint> 
+
+  <xacro:property name="LIDAR_rod_length" value="0.84" />
+  <xacro:property name="LIDAR_rod_radius" value="0.05" />
+  <!--LIDAR Rod-->
+    <link name="LIDAR_Rod">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <cylinder length="${LIDAR_rod_length}" radius="${LIDAR_rod_radius}" />
+      </geometry>
+      <material name="red">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="${LIDAR_rod_length}" radius="${LIDAR_rod_radius}" />
+      </geometry>
+    </collision>
+      <xacro:inertial_cylinder radius="${LIDAR_rod_radius}" length="${LIDAR_rod_length}" density="2700">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_cylinder>
+
+  </link>
+
+  <joint name="body_to_LIDAR_Rod" type="fixed">
+    <axis xyz="0 0 0"/>
+    <origin xyz="0 0 ${(box_size_height/2)+(LIDAR_rod_length/2)+0.6}" rpy="0 0 0"/> <!--The 0.6 is for the amount the box is lifted off ground-->
+    <parent link="base_link" />
+    <child link="LIDAR_Rod" /> 
+  </joint>  
+
+  <link name="LIDAR_top">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <cylinder length="0.1" radius="0.1" />
+      </geometry>
+      <material name="red">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.1" radius="0.1" />
+      </geometry>
+    </collision>
+      <xacro:inertial_cylinder radius="0.1" length="0.1" density="509">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_cylinder>
+  </link>
+
+  <joint name="LIDAR_Rod_to_LIDAR" type="fixed">
+    <axis xyz="0 0 0"/>
+    <origin xyz="0 0 ${(LIDAR_rod_length/2)+0.05}" rpy="0 0 0"/>
+    <parent link="LIDAR_Rod" />
+    <child link="LIDAR_top" /> 
+  </joint>  
+  
+  <link name="camera_frame_front">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <box size="0.033 0.175 0.03" />
+      </geometry>
+      <material name="grey">
+        <color rgba="0.5 0.5 0.5 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.033 0.175 0.03" />
+      </geometry>
+    </collision>
+      <xacro:inertial_box length="0.033" width="0.175" height="0.03" density="300">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_box>
+  </link>
+
+  <joint name="base_link_to_camera_frame_front" type="fixed">
+    <axis xyz="0 0 0"/>
+    <origin xyz="0.7665 0 0.5" rpy="0 0 0"/>
+    <parent link="base_link" />
+    <child link="camera_frame_front" /> 
+  </joint> 
+
+  <link name="camera_frame_back">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <box size="0.033 0.175 0.03" />
+      </geometry>
+      <material name="grey">
+        <color rgba="0.5 0.5 0.5 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.033 0.175 0.03" />
+      </geometry>
+    </collision>
+      <xacro:inertial_box length="0.033" width="0.175" height="0.03" density="300">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_box>
+  </link>
+
+  <joint name="base_link_to_camera_frame_back" type="fixed">
+    <axis xyz="0 0 0"/>
+    <origin xyz="-0.7665 0 0.5" rpy="0 0 0"/>
+    <parent link="base_link" />
+    <child link="camera_frame_back" /> 
+  </joint> 
+
+  <link name="sensor_right_front">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 1.5707"/>  
+      <geometry>
+        <cylinder length="0.001" radius="0.0096"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+        <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.001" radius="0.0096"/>
+      </geometry>
+    </collision>
+      <xacro:inertial_cylinder radius="0.0096" length="0.001" density="1200">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_cylinder>
+  </link>
+
+    <joint name="camera_frame_front_to_sensor_right" type="fixed">
+    <axis xyz="0 0 0"/>
+    <origin xyz="0.017 0.06 0" rpy="0 1.57 0"/>
+    <parent link="camera_frame_front" />
+    <child link="sensor_right_front" /> 
+  </joint> 
+
+    <link name="sensor_left_front">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 1.5707"/>  
+      <geometry>
+        <cylinder length="0.001" radius="0.0096"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+        <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.001" radius="0.0096"/>
+      </geometry>
+    </collision>
+      <xacro:inertial_cylinder radius="0.0096" length="0.001" density="1200">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_cylinder>
+  </link>
+
+    <joint name="camera_frame_front_to_sensor_left" type="fixed">
+    <axis xyz="0 0 0"/>
+    <origin xyz="0.017 -0.06 0" rpy="0 1.57 0"/>
+    <parent link="camera_frame_front" />
+    <child link="sensor_left_front" /> 
+  </joint> 
+
+      <link name="sensor_right_back">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 1.5707"/>  
+      <geometry>
+        <cylinder length="0.001" radius="0.0096"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+        <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.001" radius="0.0096"/>
+      </geometry>
+    </collision>
+      <xacro:inertial_cylinder radius="0.0096" length="0.001" density="1200">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_cylinder>
+  </link>
+
+    <joint name="camera_frame_back_to_sensor_right" type="fixed">
+    <axis xyz="0 0 0"/>
+    <origin xyz="-0.017 -0.06 0" rpy="0 1.57 0"/>
+    <parent link="camera_frame_back" />
+    <child link="sensor_right_back" /> 
+  </joint> 
+
+        <link name="sensor_left_back">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 1.5707"/>  
+      <geometry>
+        <cylinder length="0.001" radius="0.0096"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+        <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.001" radius="0.0096"/>
+      </geometry>
+    </collision>
+      <xacro:inertial_cylinder radius="0.0096" length="0.001" density="1200">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_cylinder>
+  </link>
+
+    <joint name="camera_frame_back_to_sensor_left" type="fixed">
+    <axis xyz="0 0 0"/>
+    <origin xyz="-0.017 0.06 0" rpy="0 1.57 0"/>
+    <parent link="camera_frame_back" />
+    <child link="sensor_left_back" /> 
+  </joint> 
+
+  <xacro:property name="wheel_length" value="0.15" />
+  <xacro:property name="wheel_radius" value="0.15" />
+  <xacro:property name="cart_length" value="0.1" />
+  <xacro:property name="cart_radius" value="0.09" />
+ 
+  <!-- Shopping cart wheels -->
+  <link name="wheel_front_right">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 1.5707"/>  
+      <geometry>
+        <cylinder length="${cart_length}" radius="${cart_radius}"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+        <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="${cart_length}" radius="${cart_radius}" />
+      </geometry>
+    </collision>
+      <xacro:inertial_cylinder radius="${cart_radius}" length="${cart_length}" density="1200">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_cylinder>
+  </link>
+
+  <link name="wheel_front_left">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 1.5707"/>  
+      <geometry>
+        <cylinder length="${cart_length}" radius="${cart_radius}"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+        <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="${cart_length}" radius="${cart_radius}" />
+      </geometry>
+    </collision>
+      <xacro:inertial_cylinder radius="${cart_radius}" length="${cart_length}" density="1200">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_cylinder>
+  </link>
+
+  <xacro:property name="revolute_radius" value="0.06" />
+  <xacro:property name="revolute_length" value="0.01" />
+  <link name="revolute_front_left">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>  
+      <geometry>
+        <cylinder length="${revolute_length}" radius="${revolute_radius}"/>
+      </geometry>
+      <material name="red">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+        <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.065 0.065 0.01" />
+      </geometry>
+    </collision>
+      <xacro:inertial_cylinder radius="${revolute_radius}" length="${revolute_length}" density="2700">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_cylinder>
+  </link>
+
+    <link name="revolute_front_right">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>  
+      <geometry>
+        <cylinder length="${revolute_length}" radius="${revolute_radius}"/>
+      </geometry>
+      <material name="red">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+        <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.065 0.065 0.01" />
+      </geometry>
+    </collision>
+      <xacro:inertial_cylinder radius="${revolute_radius}" length="${revolute_length}" density="2700">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_cylinder>
+  </link>
+
+  <xacro:property name="plate_length" value="0.2" />
+  <xacro:property name="plate_width" value="0.15" />
+  <xacro:property name="plate_height" value="0.01" />
+  <link name="plate_front_left">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <box size="${plate_length} ${plate_width} ${plate_height}" />
+      </geometry>
+      <material name="green">
+        <color rgba="0 1 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${plate_length} ${plate_width} ${plate_height}"/>
+      </geometry>
+    </collision>
+      <xacro:inertial_box length="${plate_length}" width="${plate_width}" height="${plate_height}" density="2700">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_box>
+  </link>
+
+    <link name="plate_front_right">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <box size="${plate_length} ${plate_width} ${plate_height}" />
+      </geometry>
+      <material name="green">
+        <color rgba="0 1 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${plate_length} ${plate_width} ${plate_height}"/>
+      </geometry>
+    </collision>
+      <xacro:inertial_box length="${plate_length}" width="${plate_width}" height="${plate_height}" density="2700">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_box>
+  </link>
+
+    <joint name="body_to_front_left_plate" type="fixed">
+    <axis xyz="0 0 0"/>
+    <origin xyz="${box_size_length/2+plate_length/2} 0.51 0.2" rpy="0 0 0"/>
+    <parent link="base_link" />
+    <child link="plate_front_left" />
+  </joint>
+
+  <joint name="body_to_front_right_plate" type="fixed">
+    <axis xyz="0 0 0"/>
+    <origin xyz="${box_size_length/2+plate_length/2} -0.51 0.2" rpy="0 0 0"/>
+    <parent link="base_link" />
+    <child link="plate_front_right" />
+  </joint>
+
+  <joint name="front_left_plate_to_revolute_front_left" type="continuous">
+    <axis xyz="0 0 1"/>
+    <origin xyz="0 0 -${plate_height/2+revolute_length/2}" rpy="0 0 0"/>
+    <parent link="plate_front_left" />
+    <child link="revolute_front_left" />
+  </joint>
+
+  <joint name="front_right_plate_to_revolute_front_right" type="continuous">
+    <axis xyz="0 0 1"/>
+    <origin xyz="0 0 -${plate_height/2+revolute_length/2}" rpy="0 0 0"/>
+    <parent link="plate_front_right" />
+    <child link="revolute_front_right" />
+  </joint>
+
+  <joint name="revolute_front_left_to_front_left_wheel" type="continuous">
+    <axis xyz="0 0 1"/>
+    <origin xyz="0 0 -${(revolute_length/2)+(cart_radius/2)+0.045}" rpy="1.5707 0 0"/>
+    <parent link="revolute_front_left" />
+    <child link="wheel_front_left" /> 
+  </joint>
+
+  <joint name="revolute_front_right_to_front_right_wheel" type="continuous">
+    <axis xyz="0 0 1"/>
+    <origin xyz="0 0 -${(revolute_length/2)+(cart_radius/2)+0.045}" rpy="1.5707 0 0"/>
+    <parent link="revolute_front_right" />
+    <child link="wheel_front_right" /> 
+  </joint>
+
+
+
+
+  <!--Actuator wheels-->
+  <link name="wheel_back_right">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 1.5707"/>  
+      <geometry>
+        <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+        <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="${wheel_length}" radius="${wheel_radius}" />
+      </geometry>
+    </collision>
+      <xacro:inertial_cylinder radius="${wheel_radius}" length="${wheel_length}" density="1500">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_cylinder>
+  </link>
+
+  <link name="wheel_back_left">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>  
+      <geometry>
+        <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+        <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="${wheel_length}" radius="${wheel_radius}" />
+      </geometry>
+    </collision>
+      <xacro:inertial_cylinder radius="${wheel_radius}" length="${wheel_length}" density="1500">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_cylinder>
+  </link>
+
+
+  <joint name="body_to_back_left_wheel" type="continuous">
+    <axis xyz="0 0 1"/>
+    <origin xyz="-0.65 0.675 ${wheel_radius}" rpy="1.5707  0 0"/>
+    <parent link="base_link" />
+    <child link="wheel_back_left" /> 
+  </joint>
+
+  <joint name="body_to_back_right_wheel" type="continuous">
+    <axis xyz="0 0 1"/>
+    <origin xyz="-0.65 -0.675 ${wheel_radius}" rpy="1.5707 0 0"/>
+    <parent link="base_link" />
+    <child link="wheel_back_right" /> 
+  </joint> 
+
+
+  <!--Robot arm section-->
+  <!--Vertical lift beam-->
+  <link name="beam1">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <box size="0.1 0.2 1.35" />
+      </geometry>
+      <material name="blue">
+        <color rgba="0 0 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.1 0.2 1.35" />
+      </geometry>
+    </collision>
+      <xacro:inertial_box length="0.1" width="0.2" height="1.35" density="2700">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_box>
+  </link>
+
+    <link name="beam2">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <box size="0.1 0.2 1.35" />
+      </geometry>
+      <material name="blue">
+        <color rgba="0 0 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.1 0.2 1.35" />
+      </geometry>
+    </collision>
+      <xacro:inertial_box length="0.1" width="0.2" height="1.35" density="2700">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_box>
+  </link>
+
+
+    <joint name="body_to_beam1" type="fixed">
+    <axis xyz="0 0 0"/>
+    <origin xyz="0.7 0.7 1" rpy="0 0 0"/>
+    <parent link="base_link" />
+    <child link="beam1" />  
+  </joint>
+
+    <joint name="body_to_beam2" type="fixed">
+    <axis xyz="0 0 0"/>
+    <origin xyz="-0.7 0.7 1" rpy="0 0 0"/>
+    <parent link="base_link" />
+    <child link="beam2" /> 
+  </joint>
+
+
+  <link name="beam3">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <box size="1.5 0.1 0.2" />
+      </geometry>
+      <material name="blue">
+        <color rgba="0 0 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="1.5 0.1 0.2" />
+      </geometry>
+    </collision>
+      <xacro:inertial_box length="1.5" width="0.1" height="0.2" density="2700">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_box>
+  </link>
+
+    <joint name="beam3_to_beam2" type="prismatic">
+    <axis xyz="0 0 1"/>
+    <origin xyz="0.7 0.15 -0.55" rpy="0 0 0"/>
+    <limit lower="0.0" upper="1.0" effort="100" velocity="1.0"/>
+    <dynamics damping="100" friction="100"/>
+    <parent link="beam2" />
+    <child link="beam3" />  
+  </joint>
+
+
+  <!--Robot arm joints-->
+
+  <link name="plate_horizontal">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <box size="0.2 0.01 0.2"  />
+      </geometry>
+      <material name="green">
+        <color rgba="0 1 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.2 0.01 0.2" />
+      </geometry>
+    </collision>
+      <xacro:inertial_box length="0.2" width="0.01" height="0.2" density="2700">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_box>
+  </link>
+
+  <joint name="beam3_to_plate_horizontal" type="prismatic">
+    <axis xyz="1 0 0"/>
+    <origin xyz="0 0.055   0" rpy="0 0 0"/>
+    <limit lower="-0.5" upper="0.5" effort="100" velocity="1.0"/>
+    <dynamics damping="100" friction="100"/>
+    <parent link="beam3" />
+    <child link="plate_horizontal" />  
+  </joint>
+
+    <link name="plate_vertical">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <box size="0.2 0.2 0.01"  />
+      </geometry>
+      <material name="green">
+        <color rgba="0 1 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.2 0.2 0.01" />
+      </geometry>
+    </collision>
+      <xacro:inertial_box length="0.2" width="0.2" height="0.01" density="2700">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_box>
+  </link>
+
+  <joint name="plate_horizontal_to_plate_vertical" type="fixed">
+    <axis xyz="0 0 0"/>
+    <origin xyz="0 0.095 0.1005" rpy="0 0 0"/>
+    <parent link="plate_horizontal" />
+    <child link="plate_vertical" />  
+  </joint>
+
+  <link name="joint_1">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <cylinder length="0.178" radius="0.041" />
+      </geometry>
+      <material name="light_blue">
+        <color rgba="0.678 0.847 0.902 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.178" radius="0.041" />
+      </geometry>
+    </collision>
+      <xacro:inertial_cylinder radius="0.041" length="0.178" density="2700">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_cylinder>
+  </link>
+
+  <joint name="plate_vertical_to_joint_1" type="revolute">
+    <axis xyz="0 0 1"/>
+    <origin xyz="0 0 0.09" rpy="0 0 0"/>
+    <limit lower="-3.14" upper="0" effort="100" velocity="1.0"/>
+    <dynamics damping="100" friction="100"/>
+    <parent link="plate_vertical" />
+    <child link="joint_1" />  
+  </joint>
+
+    <link name="joint_2">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <cylinder length="0.15" radius="0.041" />
+      </geometry>
+      <material name="light_blue">
+        <color rgba="0.678 0.847 0.902 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.15" radius="0.041" />
+      </geometry>
+    </collision>
+      <xacro:inertial_cylinder radius="0.041" length="0.15" density="2700">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_cylinder>
+  </link>
+
+  <joint name="joint_1_to_joint_2" type="revolute">
+    <axis xyz="0 0 1"/>
+    <origin xyz="-0.115 0 0" rpy="0 -1.5707 0"/>
+    <limit lower="-1.57" upper="1.57" effort="100" velocity="1.0"/>
+    <dynamics damping="100" friction="100"/>
+    <parent link="joint_1" />
+    <child link="joint_2" />  
+  </joint>
+
+    <link name="joint_3">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <cylinder length="0.234" radius="0.03" />
+      </geometry>
+      <material name="light_blue">
+        <color rgba="0.678 0.847 0.902 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.234" radius="0.03" />
+      </geometry>
+    </collision>
+      <xacro:inertial_cylinder radius="0.03" length="0.234" density="2700">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_cylinder>
+  </link>
+
+  <joint name="joint_2_to_joint_3" type="fixed">
+    <axis xyz="0 0 0"/>
+    <origin xyz="0.142 0 0" rpy="0 1.5707 0"/>
+    <parent link="joint_2" />
+    <child link="joint_3" />  
+  </joint>
+
+  <link name="joint_4">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <cylinder length="0.15" radius="0.041" />
+      </geometry>
+      <material name="light_blue">
+        <color rgba="0.678 0.847 0.902 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.15" radius="0.041" />
+      </geometry>
+    </collision>
+      <xacro:inertial_cylinder radius="0.041" length="0.15" density="2700">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_cylinder>
+  </link>
+
+  <joint name="joint_3_to_joint_4" type="fixed">
+    <axis xyz="0 0 0"/>
+    <origin xyz="0 0 0.18" rpy="0 0 0"/>
+    <parent link="joint_3" />
+    <child link="joint_4" />  
+  </joint>
+
+    <link name="joint_5">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <cylinder length="0.15" radius="0.041" />
+      </geometry>
+      <material name="light_blue">
+        <color rgba="0.678 0.847 0.902 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.15" radius="0.041" />
+      </geometry>
+    </collision>
+      <xacro:inertial_cylinder radius="0.041" length="0.15" density="2700">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_cylinder>
+  </link>
+
+  <joint name="joint_4_to_joint_5" type="revolute">
+    <axis xyz="0 0 1"/>
+    <origin xyz="0.115 0 0" rpy="0 -1.5707 0"/>
+    <limit lower="-3.14" upper="3.14" effort="100" velocity="1.0"/>
+    <dynamics damping="100" friction="100"/>
+    <parent link="joint_4" />
+    <child link="joint_5" />  
+  </joint>
+
+      <link name="joint_6">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <cylinder length="0.392" radius="0.03" />
+      </geometry>
+      <material name="light_blue">
+        <color rgba="0.678 0.847 0.902 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.392" radius="0.03" />
+      </geometry>
+    </collision>
+      <xacro:inertial_cylinder radius="0.03" length="0.392" density="2700">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_cylinder>
+  </link>
+
+  <joint name="joint_5_to_joint_6" type="fixed">
+    <axis xyz="0 0 0"/>
+    <origin xyz="0.22 0 0" rpy="0 1.5707 0"/>
+    <parent link="joint_5" />
+    <child link="joint_6" />  
+  </joint>
+
+      <link name="joint_7">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <cylinder length="0.15" radius="0.041" />
+      </geometry>
+      <material name="light_blue">
+        <color rgba="0.678 0.847 0.902 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.15" radius="0.041" />
+      </geometry>
+    </collision>
+      <xacro:inertial_cylinder radius="0.041" length="0.15" density="2700">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_cylinder>
+  </link>
+
+  <joint name="joint_6_to_joint_7" type="fixed">
+    <axis xyz="0 0 0"/>
+    <origin xyz="0 0 0.271" rpy="0 0 0"/>
+    <parent link="joint_6" />
+    <child link="joint_7" />  
+  </joint>
+
+  <link name="joint_8">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <cylinder length="0.15" radius="0.041" />
+      </geometry>
+      <material name="light_blue">
+        <color rgba="0.678 0.847 0.902 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.15" radius="0.041" />
+      </geometry>
+    </collision>
+      <xacro:inertial_cylinder radius="0.041" length="0.15" density="2700">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_cylinder>
+  </link>
+
+  <joint name="joint_7_to_joint_8" type="revolute">
+    <axis xyz="0 0 1"/>
+    <origin xyz="-0.115 0 0" rpy="0 -1.5707 0"/>
+    <limit lower="-3.14" upper="3.14" effort="100" velocity="1.0"/>
+    <dynamics damping="100" friction="100"/>
+    <parent link="joint_7" />
+    <child link="joint_8" />  
+  </joint>
+
+        <link name="joint_9">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <cylinder length="0.15" radius="0.041" />
+      </geometry>
+      <material name="light_blue">
+        <color rgba="0.678 0.847 0.902 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.15" radius="0.041" />
+      </geometry>
+    </collision>
+      <xacro:inertial_cylinder radius="0.041" length="0.15" density="2700">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_cylinder>
+  </link>
+
+  <joint name="joint_8_to_joint_9" type="revolute">
+    <axis xyz="0 0 1"/>
+    <origin xyz="0.115 0 0" rpy="0 1.5707 0"/>
+    <limit lower="-3.14" upper="3.14" effort="100" velocity="1.0"/>
+    <dynamics damping="100" friction="100"/>
+    <parent link="joint_8" />
+    <child link="joint_9" />  
+  </joint>
+
+   <link name="camera_frame_arm">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <box size="0.033 0.13 0.03" />
+      </geometry>
+      <material name="grey">
+        <color rgba="0.5 0.5 0.5 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.033 0.13 0.03" />
+      </geometry>
+    </collision>
+      <xacro:inertial_box length="0.033" width="0.13" height="0.03" density="300">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_box>
+  </link>
+
+  <joint name="joint_9_to_camera_frame_arm" type="fixed">
+    <axis xyz="0 0 0"/>
+    <origin xyz="0 0.058 0" rpy="0 0 1.57"/>
+    <parent link="joint_9" />
+    <child link="camera_frame_arm" /> 
+  </joint> 
+
+    <link name="sensor_right_arm">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>  
+      <geometry>
+        <cylinder length="0.001" radius="0.0096"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+        <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.001" radius="0.0096"/>
+      </geometry>
+    </collision>
+      <xacro:inertial_cylinder radius="0.0096" length="0.001" density="1200">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_cylinder>
+  </link>
+
+    <joint name="camera_frame_arm_to_sensor_right" type="fixed">
+    <axis xyz="0 0 0"/>
+    <origin xyz="0 0.045 0.0155" rpy="0 0 0"/>
+    <parent link="camera_frame_arm" />
+    <child link="sensor_right_arm" /> 
+  </joint> 
+
+    <link name="sensor_left_arm">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>  
+      <geometry>
+        <cylinder length="0.001" radius="0.0096"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+        <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.001" radius="0.0096"/>
+      </geometry>
+    </collision>
+      <xacro:inertial_cylinder radius="0.0096" length="0.001" density="1200">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_cylinder>
+  </link>
+
+    <joint name="camera_frame_arm_to_sensor_left" type="fixed">
+    <axis xyz="0 0 0"/>
+    <origin xyz="0 -0.045 0.0155" rpy="0 0 0"/>
+    <parent link="camera_frame_arm" />
+    <child link="sensor_left_arm" /> 
+  </joint> 
+
+    <link name="end_effector">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <cylinder length="0.2" radius="0.01" />
+      </geometry>
+      <material name="light_blue">
+        <color rgba="0.678 0.847 0.902 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.2" radius="0.01" />
+      </geometry>
+    </collision>
+      <xacro:inertial_cylinder radius="0.01" length="0.2" density="2700">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_cylinder>
+  </link>
+
+  <joint name="joint_9_to_end_effector" type="fixed">
+    <axis xyz="0 0 0"/>
+    <origin xyz="0 0 0.175" rpy="0 0 0"/>
+    <parent link="joint_9" />
+    <child link="end_effector" />  
+  </joint>
+
+    <link name="nozzle">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <box size="0.1 0.1 0.01" />
+      </geometry>
+      <material name="light_blue">
+        <color rgba="0.678 0.847 0.902 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.1 0.1 0.01" />
+      </geometry>
+    </collision>
+      <xacro:inertial_box length="0.1" width="0.1" height="0.01" density="2700">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_box>
+  </link>
+
+  <joint name="end_effector_to_nozzle" type="fixed">
+    <axis xyz="0 0 0"/>
+    <origin xyz="0 0 0.105" rpy="0 0 0"/>
+    <parent link="end_effector" />
+    <child link="nozzle" />  
+  </joint>
+
+
+
+
+  
+</robot>
