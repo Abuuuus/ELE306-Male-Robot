@@ -1,4 +1,1 @@
-
-
-
-
+[MaleRobot,ArmInfo] = importrobot('MaleRobot');
