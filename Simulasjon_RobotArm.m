@@ -1,0 +1,1 @@
+[Robot_X,ArmInfo] = importrobot("ProsjektX_MaleRobot_RobotArm");
