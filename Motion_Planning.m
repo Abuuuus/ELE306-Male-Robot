@@ -1,5 +1,4 @@
 clear
-% Krever Robotics Toolbox by Peter Corke for 'SerialLink'
 L1 = Link([0 0 0 pi/2], 'standard'); 
 L2 = Link([0 0.15 0.50 0], 'standard');
 L3 = Link([0 0.15 0 -pi/2], 'standard');
@@ -52,7 +51,6 @@ Kurs5 = ctraj(T6_PaintPos3, T7_PaintPos4, 50);
 %Kurs7 = ctraj(T8_PaintPos5, T9_StopPaintPos, 50);
 
 % Initialize a matrix to store joint configurations
-% Dårlige navn her
 num_points = size(Kurs2, 3);
 joint_trajectory = zeros(num_points, length(robot.links));
 num_points2 = size(Kurs3, 3);
